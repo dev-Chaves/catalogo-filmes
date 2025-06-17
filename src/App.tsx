@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Search from './components/Search'
 import Spinner from './components/Spinner';
+import MovieCard from './components/MovieCard';
 
 const url = import.meta.env.VITE_API_URL;
 const options = {
@@ -85,7 +86,8 @@ function App() {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                  <p className='text-white'>{movie.title}</p>
+                  // <p className='text-white'>{movie.title}</p>
+                  <MovieCard key={movie.id} movie={movie}/> 
               ))}
             </ul>
           )}
