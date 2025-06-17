@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import Search from './components/Search'
+import Spinner from './components/Spinner';
 
 
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -27,8 +28,13 @@ const options = {
 function App() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [movieList, setMovieList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchMovies = async () => {
+
+    setIsLoading(true);
 
     try {
       const endpoint = url;
@@ -40,7 +46,15 @@ function App() {
       }
 
       const data = await res.json();
-      
+
+      if(data.Response === false){
+        setErrorMessage(data.Error ||'Nenhum filme encontrado');
+        setMovieList([]);
+        return;
+      }
+
+      setMovieList(data.results || []);
+
       console.log('Filmes encontrados:', data);
 
       return data;
@@ -48,7 +62,10 @@ function App() {
     }catch (error){
       console.error('Erro ao buscar filmes:', error);
       return null;
+    } finally {
+      setIsLoading(false);
     }
+
   }
 
   useEffect( () => {
@@ -72,8 +89,20 @@ function App() {
         </header>
 
         <section className='all-movies'>
-          <h2>Todos Filmes</h2>
+          <h2 className='mt-[20px]'>Todos Filmes</h2>
 
+          {isLoading ? (
+           <Spinner/>
+          ) : errorMessage ? (
+            <p className='text-red-500'> {errorMessage} </p>
+          ) : (
+            <ul>
+              {movieList.map((movie) => (
+                  <p className='text-white'>{movie.title}</p>
+              ))}
+            </ul>
+          )}
+        
         </section>
 
         <h1 className='text-3xl'> {searchTerm} </h1>
@@ -81,8 +110,6 @@ function App() {
 
       </div>
 
-      
-      
     </main>
   )
 }
