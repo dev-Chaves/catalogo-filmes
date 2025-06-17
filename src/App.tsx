@@ -3,25 +3,12 @@ import './App.css'
 import Search from './components/Search'
 import Spinner from './components/Spinner';
 
-
-const BASE_URL = 'https://api.themoviedb.org/3';
-
-// const API_KEY = import.meta.env.VITE_API_KEY;
-
-// const API_OPTIONS = {
-//   method: 'GET',
-//   headers: {
-//     accept: 'application/json',
-//     Authorization: `Bearer ${API_KEY}`
-//   }
-// }
-
-const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc';
+const url = import.meta.env.VITE_API_URL;
 const options = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MzlkZDliNzUxN2VkY2RhNTkyNTRhODdlZjljYzBlOSIsIm5iZiI6MTc1MDE4MzcxMy42MTMsInN1YiI6IjY4NTFhZjIxZmIyNWY4MGUwY2JiZDkxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hestRH_pe7C08Eu4fxDp0ome3jChnRPcDJMkgzBmHhQ'
+    Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
   }
 };
 
