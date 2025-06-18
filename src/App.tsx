@@ -3,8 +3,10 @@ import './App.css'
 import Search from './components/Search'
 import Spinner from './components/Spinner';
 import MovieCard from './components/MovieCard';
+import { useDebounce } from 'react-use';
 
 const url = import.meta.env.VITE_API_URL;
+const urlSearch = import.meta.env.VITE_API_URL_SEARCH;
 const options = {
   method: 'GET',
   headers: {
@@ -19,13 +21,19 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [movieList, setMovieList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [debouncedSearchTerm, setdebounceSearchTerm] = useState('');
 
-  const fetchMovies = async () => {
+  useDebounce(() => { setdebounceSearchTerm(searchTerm) }, 700, [searchTerm]);
+
+  const fetchMovies = async (query = "") => {
 
     setIsLoading(true);
+    setErrorMessage('');
 
     try {
-      const endpoint = url;
+
+      const endpoint = query ? `${urlSearch}/search/movie?query=${encodeURIComponent(query)}` 
+      : url;
 
       const res = await fetch(endpoint, options);
 
@@ -57,8 +65,8 @@ function App() {
   }
 
   useEffect( () => {
-      fetchMovies();
-  }, []);
+      fetchMovies(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return(
     <main>
